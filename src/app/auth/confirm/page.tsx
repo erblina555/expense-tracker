@@ -1,44 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 
-export default function ConfirmEmailPage() {
-  const [message, setMessage] = useState("Duke konfirmuar email-in...");
-
-  useEffect(() => {
-    async function confirmEmail() {
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get("code");
-
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-        if (error) {
-          setMessage("Email nuk u konfirmua. Provo perseri linkun nga email-i.");
-          return;
-        }
-      }
-
-      setMessage("Email u konfirmua me sukses.");
-    }
-
-    void confirmEmail();
-  }, []);
-
+export default function ConfirmPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f7fbff] px-6 py-10 text-[#253044]">
-      <section className="w-full max-w-md rounded-lg border border-[#f7b7d2] bg-white p-6 text-center shadow-sm">
-        <h1 className="text-2xl font-bold">Expense Tracker</h1>
-        <p className="mt-4 rounded-md border border-[#bdd7fb] bg-[#eaf4ff] p-3 text-sm font-medium text-[#4f74a8]">
-          {message}
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-pink-100 via-white to-blue-100 px-6">
+      <section className="w-full max-w-md rounded-2xl border border-pink-200 bg-white p-10 text-center shadow-lg">
+        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-pink-200 to-blue-200 text-4xl">
+          💌
+        </div>
+
+        <h1 className="text-3xl font-bold text-[#253044]">Email u Konfirmua</h1>
+
+        <p className="mt-4 text-sm text-gray-600">
+          Account-i juaj u verifikua me sukses.
         </p>
+
+        <p className="mt-2 text-sm text-gray-500">
+          Tani mund te beni login ne aplikacion.
+        </p>
+
         <Link
-          className="mt-6 inline-flex rounded-md bg-[#f7b7d2] px-4 py-2 font-semibold text-[#253044] transition hover:bg-[#f4a6c8]"
-          href="/"
+          href="/login"
+          className="mt-8 inline-block rounded-xl bg-gradient-to-r from-pink-300 to-blue-300 px-6 py-3 font-semibold text-white shadow-md transition hover:scale-105"
         >
-          Kthehu ne faqen kryesore
+          Shko te Login
         </Link>
       </section>
     </main>

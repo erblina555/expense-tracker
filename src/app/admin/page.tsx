@@ -36,6 +36,17 @@ export default function AdminPage() {
     setIsLoading(true);
 
     const { data } = await supabase.auth.getSession();
+
+    const ADMIN_EMAIL = "erblinakalludra5@gmail.com";
+
+    if (
+      data.session?.user.email?.trim().toLowerCase() !==
+      ADMIN_EMAIL.toLowerCase()
+    ) {
+      router.replace("/dashboard");
+      return;
+    }
+
     const token = data.session?.access_token;
 
     if (!token) {
@@ -50,6 +61,7 @@ export default function AdminPage() {
     });
 
     const result = await response.json();
+
     setIsLoading(false);
 
     if (!response.ok) {
@@ -77,12 +89,18 @@ export default function AdminPage() {
     }
 
     const { data } = await supabase.auth.getSession();
-    const token = data.session?.access_token;
 
-    if (!token) {
-      router.push("/admin/login");
+    const ADMIN_EMAIL = "erblinakalludra5@gmail.com";
+
+    if (
+      data.session?.user.email?.trim().toLowerCase() !==
+      ADMIN_EMAIL.toLowerCase()
+    ) {
+      router.replace("/dashboard");
       return;
     }
+
+    const token = data.session?.access_token;
 
     const response = await fetch("/api/admin/users", {
       body: JSON.stringify({ userId: user.id }),
@@ -198,7 +216,9 @@ export default function AdminPage() {
                           </span>
                         ) : null}
                       </td>
-                      <td className="py-3 pr-4">{user.budget.toFixed(2)} EUR</td>
+                      <td className="py-3 pr-4">
+                        {user.budget.toFixed(2)} EUR
+                      </td>
                       <td className="py-3 pr-4">
                         {user.totalSpent.toFixed(2)} EUR
                       </td>

@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
       return;
     }
 
-    if (data.user.email !== adminEmail) {
+    if (data.user?.email !== adminEmail) {
       await supabase.auth.signOut();
       setMessage("Ky account nuk ka qasje admin.");
       return;

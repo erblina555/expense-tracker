@@ -54,7 +54,9 @@ export default function LoginPage() {
     setIsLoading(true);
     setMessage("");
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const ADMIN_EMAIL = "erblinakalludra5@gmail.com";
+
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -67,7 +69,23 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    const currentUser = data.user;
+
+    if (!currentUser) {
+      setMessageType("error");
+      setMessage("User nuk u gjet.");
+      return;
+    }
+
+    // wait session restore
+    await supabase.auth.getSession();
+
+    if (currentUser.email?.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+      router.replace("/admin");
+      return;
+    }
+
+    router.replace("/dashboard");
   }
 
   async function register() {
@@ -91,9 +109,7 @@ export default function LoginPage() {
       password,
       options: {
         emailRedirectTo:
-          typeof window !== "undefined"
-            ? `${window.location.origin}/auth/confirm`
-            : undefined,
+          "https://expense-tracker-topaz-xi-52.vercel.app/auth/confirm",
       },
     });
 
@@ -119,7 +135,10 @@ export default function LoginPage() {
             <Link className="text-sm font-semibold text-[#4f74a8]" href="/">
               Back
             </Link>
-            <Link className="text-sm font-semibold text-[#8f456f]" href="/share">
+            <Link
+              className="text-sm font-semibold text-[#8f456f]"
+              href="/share"
+            >
               Share
             </Link>
           </div>
@@ -200,7 +219,9 @@ export default function LoginPage() {
                 <div className="rounded-md border border-[#f7b7d2] bg-[#fff7fb] p-3 text-sm">
                   {passwordChecks.map((check) => (
                     <p
-                      className={check.valid ? "text-[#4f74a8]" : "text-[#8a94a8]"}
+                      className={
+                        check.valid ? "text-[#4f74a8]" : "text-[#8a94a8]"
+                      }
                       key={check.label}
                     >
                       {check.valid ? "[OK]" : "-"} {check.label}
@@ -235,7 +256,7 @@ export default function LoginPage() {
                 ? "Duke punuar..."
                 : mode === "login"
                   ? "Login"
-                : "Register"}
+                  : "Register"}
             </button>
 
             <Link
